@@ -1,6 +1,7 @@
 const inquirer = require('inquirer')
-const fs = require('fs')
+// const fs = require('fs')
 const generatePage = require('./src/page-template.js')
+const generateSite = require('./utils/generate-site.js')
 
 const mockData = {
     name: 'Lernantino',
@@ -181,14 +182,25 @@ const promptProject = (profileData) => {
     })
 }
 
+// promptUser()
+//     .then(userAnswers => promptProject(userAnswers))
+//     .then(projectAnswers => {
+//         const pageHTML = generatePage(projectAnswers)
+//         fs.writeFile('./dist/index.html', pageHTML, err => {
+//             if (err) throw err
+//             console.log('Portfolio complete! Check out index.html to see the output!')
+
+//             fs.copyFile('./src/style.css', './dist/style.css', err => {
+//                 if (err) throw err
+//                 console.log('Stylesheet copied successfully!')
+//             })
+//         })
+//     })
+
 promptUser()
     .then(userAnswers => promptProject(userAnswers))
-    .then(projectAnswers => {
-        const pageHTML = generatePage(projectAnswers)
-        fs.writeFile('index.html', pageHTML, err => {
-            if (err) throw err
-            console.log('Portfolio complete! Check out index.html to see the output!')
-        })
-    })
+    .then(data => generatePage(data))
+    .then(html => generateSite.writeFile(html))
+    .then(() => generateSite.copyFile())
 
 // console.log(promptProject(mockData))
